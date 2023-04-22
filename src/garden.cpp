@@ -82,7 +82,7 @@ void GARDEN_CLASS::plantTree()
                         NULL,
                         this
                 ));
-    else if (cuted == 0) {
+    else if (cuted == 0 || tNum == 1) {
         pushTree(
             new TREE_CLASS(
                 last->getNumber() + 1,
@@ -101,15 +101,39 @@ void GARDEN_CLASS::plantTree()
             }
             exp++;
             cur = cur->getNext();
-        } 
-            pushTree(
-            new TREE_CLASS(
+        }
+
+        if (cur == NULL) {
+            pushTree(new TREE_CLASS(
+                    exp,
+                    0,
+                    NULL,
+                    NULL,
+                    this));
+            return;
+        }
+//            pushTree(
+//            new TREE_CLASS(
+//                exp,
+//                0,
+//                NULL,
+//                NULL,
+//                this
+//            ));
+        TREE_CLASS* newTree = new TREE_CLASS(
                 exp,
                 0,
                 NULL,
                 NULL,
-                this
-            ));
+                this);
+
+        newTree->setNext(cur);
+        cur->getPrev()->setNext(newTree);
+        newTree->setPrev(cur->getPrev());
+        cur->setPrev(newTree);
+
+        addTNum(1);
+
             cuted--;
     }
 }
@@ -133,6 +157,10 @@ void GARDEN_CLASS::extractTree(unsigned int treeID)
             {
                 after->setPrev(before);
             }
+
+            if (cur == last)
+                last = cur->getPrev();
+
 
             delete cur;
 
